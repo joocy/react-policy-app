@@ -41,7 +41,7 @@ function App() {
         </div>
         {selectedPolicy && (
           <div className="app-details">
-            <PolicyDetails policy={selectedPolicy} />
+            <PolicyDetails key={selectedPolicy.id} policy={selectedPolicy} />
           </div>
         )}
       </div>
