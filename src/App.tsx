@@ -1,23 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import './App.css'
 import { PolicyList } from './PolicyList'
 import { PolicyDetails } from './PolicyDetails'
 import { PolicySelectionProvider } from './PolicySelectionContext'
 import { getPolicies } from './policyService'
-import type { BasePolicy, BasePolicyList } from './types';
+import type { BasePolicy } from './types';
 
 function App() {
   const [selectedPolicy, setSelectedPolicy] = useState<BasePolicy | null>(null);
   const [policyFilter, setPolicyFilter] = useState<string>('');
-  const [policyList, setPolicyList] = useState<BasePolicyList>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    getPolicies().then(data => {
-      setPolicyList(data);
-      setIsLoading(false);
-    });
-  }, []);
+  const { data: policyList = [], isLoading } = useQuery({
+    queryKey: ['policies'],
+    queryFn: getPolicies,
+  });
 
   const filteredPolicies = policyList.filter(policy =>
     policy.firstName.toLowerCase().includes(policyFilter.toLowerCase())
