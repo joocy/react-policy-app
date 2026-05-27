@@ -1,11 +1,13 @@
+import { usePolicySelection } from './PolicySelectionContext';
 import { type BasePolicy } from './types';
 
 type PolicyCardProps = { 
     policy: BasePolicy 
-    onPolicySelect: (policy: BasePolicy) => void
 };
 
-export function PolicyCard({ policy, onPolicySelect }: PolicyCardProps) {
+export function PolicyCard({ policy }: PolicyCardProps) {
+    const { onPolicySelect } = usePolicySelection();
+
     return (
         <div className="policy-card" onClick={() => onPolicySelect(policy)}>
             <p><strong>Id: </strong>{policy.id}</p>

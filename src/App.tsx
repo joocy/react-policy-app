@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css'
 import { PolicyList } from './PolicyList'
 import { PolicyDetails } from './PolicyDetails'
+import { PolicySelectionProvider } from './PolicySelectionContext'
 import { getPolicies } from './policyService'
 import type { BasePolicy } from './types';
 
@@ -18,14 +19,16 @@ function App() {
   }
 
   return (
-    <>
+    <PolicySelectionProvider onPolicySelect={handlePolicySelect}>
       <h1>Policies app</h1>
       <input value={policyFilter} onChange={e => setPolicyFilter(e.target.value)} placeholder="Filter by first name" />
       {filteredPolicies.length === 0 ? (
         <p>No policies found matching "{policyFilter}"</p>
-      ):(<PolicyList policies={filteredPolicies} onPolicySelect={handlePolicySelect} />)}
+      ) : (
+        <PolicyList policies={filteredPolicies} />
+      )}
       {selectedPolicy && (<PolicyDetails policy={selectedPolicy} />)}
-    </>
+    </PolicySelectionProvider>
   )
 }
 
