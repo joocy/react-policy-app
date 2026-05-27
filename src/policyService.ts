@@ -22,6 +22,21 @@ export function getPolicies(): BasePolicyList {
             firstName: "Bob",
             lastName: "Smith",
             email: "bob.smith@yahoo.com"
+        },
+        {
+            id: "4",
+            firstName: "Alice",
+            lastName: "Johnson",
+            email: "alice.johnson@yahoo.com",
+            phoneNumber: "0987654321",
+            dateOfBirth: new Date("1985-05-15")
+        },
+        {
+            id: "5",
+            firstName: "Charlie",
+            lastName: "Brown",
+            email: "charlie.brown@yahoo.com",
+            dateOfBirth: new Date("1995-10-10")
         }
     ];
 }
