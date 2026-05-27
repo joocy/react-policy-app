@@ -34,6 +34,11 @@ function App() {
     setSelectedPolicy(policy);
   }
 
+  function handlePolicyUpdate(updated: BasePolicy) {
+    setPolicyList(prev => prev.map(p => p.id === updated.id ? updated : p));
+    setSelectedPolicy(updated);
+  }
+
   return (
     <PolicySelectionProvider onPolicySelect={handlePolicySelect}>
       <h1>Policies app</h1>
@@ -52,7 +57,7 @@ function App() {
         </div>
         {selectedPolicy && (
           <div className="app-details">
-            <PolicyDetails policy={selectedPolicy} />
+            <PolicyDetails key={selectedPolicy.id} policy={selectedPolicy} onUpdate={handlePolicyUpdate} />
           </div>
         )}
       </div>
