@@ -6,22 +6,43 @@ The browser's built-in `fetch` API combined with React's `useEffect` hook is the
 
 ## Implementation
 
-Three pieces of state are needed: the data itself, a loading flag, and (optionally) an error.
+Three pieces of state are needed: the data itself, a loading flag, and an error.
 
 ```tsx
 const [policyList, setPolicyList] = useState<BasePolicyList>([]);
 const [isLoading, setIsLoading] = useState<boolean>(true);
+const [error, setError] = useState<Error | null>(null);
 ```
 
-`useEffect` with an empty dependency array runs once after the component mounts. The fetch result is written into state when it resolves.
+`useEffect` with an empty dependency array runs once after the component mounts. The fetch result is written into state when it resolves, or the error is captured if it rejects.
 
 ```tsx
 useEffect(() => {
-  getPolicies().then(data => {
-    setPolicyList(data);
-    setIsLoading(false);
-  });
+  getPolicies()
+    .then(data => {
+      setPolicyList(data);
+    })
+    .catch(err => {
+      setError(err);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
 }, []);
+```
+
+In the JSX, render the error state alongside loading and empty states:
+
+```tsx
+{isLoading ? (
+  <p>Loading...</p>
+) : error ? (
+  <p>Failed to load policies: {error.message}</p>
+) : policyList.length === 0 ? (
+  <p>No policies found.</p>
+) : (
+  <PolicyList policies={policyList} />
+)}
 ```
 
 The service function performs the fetch and maps the raw JSON into typed objects:

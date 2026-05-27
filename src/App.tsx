@@ -10,7 +10,7 @@ import type { BasePolicy } from './types';
 function App() {
   const [selectedPolicy, setSelectedPolicy] = useState<BasePolicy | null>(null);
   const [policyFilter, setPolicyFilter] = useState<string>('');
-  const { data: policyList = [], isLoading } = useQuery({
+  const { data: policyList = [], isLoading, error } = useQuery({
     queryKey: ['policies'],
     queryFn: getPolicies,
   });
@@ -31,6 +31,8 @@ function App() {
         <div className="app-list">
           {isLoading ? (
             <p>Loading...</p>
+          ) : error ? (
+            <p>Failed to load policies: {error.message}</p>
           ) : filteredPolicies.length === 0 ? (
             <p>No policies found matching "{policyFilter}"</p>
           ) : (
