@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css'
 import { PolicyList } from './PolicyList'
 import { PolicyDetails } from './PolicyDetails'
 import { PolicySelectionProvider } from './PolicySelectionContext'
 import { getPolicies } from './policyService'
-import type { BasePolicy } from './types';
+import type { BasePolicy, BasePolicyList } from './types';
 
 function App() {
   const [selectedPolicy, setSelectedPolicy] = useState<BasePolicy | null>(null);
   const [policyFilter, setPolicyFilter] = useState<string>('');
-  const policyList = getPolicies();
+  const [policyList, setPolicyList] = useState<BasePolicyList>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    getPolicies().then(data => {
+      setPolicyList(data);
+      setIsLoading(false);
+    });
+  }, []);
+
   const filteredPolicies = policyList.filter(policy =>
     policy.firstName.toLowerCase().includes(policyFilter.toLowerCase())
   )
@@ -22,12 +31,22 @@ function App() {
     <PolicySelectionProvider onPolicySelect={handlePolicySelect}>
       <h1>Policies app</h1>
       <input value={policyFilter} onChange={e => setPolicyFilter(e.target.value)} placeholder="Filter by first name" />
-      {filteredPolicies.length === 0 ? (
-        <p>No policies found matching "{policyFilter}"</p>
-      ) : (
-        <PolicyList policies={filteredPolicies} />
-      )}
-      {selectedPolicy && (<PolicyDetails policy={selectedPolicy} />)}
+      <div className="app-layout">
+        <div className="app-list">
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : filteredPolicies.length === 0 ? (
+            <p>No policies found matching "{policyFilter}"</p>
+          ) : (
+            <PolicyList policies={filteredPolicies} />
+          )}
+        </div>
+        {selectedPolicy && (
+          <div className="app-details">
+            <PolicyDetails policy={selectedPolicy} />
+          </div>
+        )}
+      </div>
     </PolicySelectionProvider>
   )
 }

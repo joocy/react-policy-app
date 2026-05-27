@@ -1,42 +1,13 @@
 import type { BasePolicyList } from "./types";
 
-export function getPolicies(): BasePolicyList {
-    return [
-        {
-            id: "1",
-            firstName: "John",
-            lastName: "Smith",
-            email: "john.smith@yahoo.com",
-            dateOfBirth: new Date("1980-01-01")
-        },
-        {
-            id: "2",
-            firstName: "Jane",
-            lastName: "Smith",
-            email: "jane.smith@yahoo.com",
-            phoneNumber: "1234567890",
-            dateOfBirth: new Date("1990-01-01")
-        },
-        {
-            id: "3",
-            firstName: "Bob",
-            lastName: "Smith",
-            email: "bob.smith@yahoo.com"
-        },
-        {
-            id: "4",
-            firstName: "Alice",
-            lastName: "Johnson",
-            email: "alice.johnson@yahoo.com",
-            phoneNumber: "0987654321",
-            dateOfBirth: new Date("1985-05-15")
-        },
-        {
-            id: "5",
-            firstName: "Charlie",
-            lastName: "Brown",
-            email: "charlie.brown@yahoo.com",
-            dateOfBirth: new Date("1995-10-10")
-        }
-    ];
+export async function getPolicies(): Promise<BasePolicyList> {
+    const response = await fetch(import.meta.env.VITE_POLICIES_API_URL);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch policies: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.map((policy: any) => ({
+        ...policy,
+        dateOfBirth: policy.dateOfBirth ? new Date(policy.dateOfBirth) : undefined,
+    }));
 }

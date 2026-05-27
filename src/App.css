@@ -183,6 +183,16 @@
   }
 }
 
+.app-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.app-details {
+  flex-shrink: 0;
+}
+
 .policy-card {
   text-align: left;
   border: 1px solid #999;
